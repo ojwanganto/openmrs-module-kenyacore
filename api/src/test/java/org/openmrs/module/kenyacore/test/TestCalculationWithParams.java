@@ -28,7 +28,6 @@ import java.util.Map;
 /**
  * Dummy calculation for testing that returns true for everybody and has parameters
  */
-@Ignore
 public class TestCalculationWithParams extends BaseCalculation implements PatientCalculation {
 
 	public TestCalculationWithParams() {

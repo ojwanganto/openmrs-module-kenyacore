@@ -23,7 +23,6 @@ import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.*;
 /**
  * Metadata for unit tests
  */
-@Ignore
 @Component
 public class TestMetadata extends AbstractMetadataBundle {
 
