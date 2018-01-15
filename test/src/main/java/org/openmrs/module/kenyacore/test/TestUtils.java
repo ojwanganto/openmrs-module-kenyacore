@@ -201,14 +201,19 @@ public class TestUtils {
 		OrderType drugOrderType = Context.getOrderService().getOrderTypeByUuid(OrderType.DRUG_ORDER_TYPE_UUID);
 
 		DrugOrder order = new DrugOrder();
-		//order.setOrderType(drugOrderType);
-		//order.setOrderType(Context.getOrderService().getOrderType(2));
 		order.setPatient(patient);
 		List<Provider> provider = (List<Provider>) Context.getProviderService().getProvidersByPerson(Context.getUserService().getUser(1).getPerson());
-		//order.setEncounter(buildEncounter());
+		Encounter e = Context.getEncounterService().getEncounter(3);
+		order.setEncounter(e);
 		order.setOrderer(provider.get(0));
 		order.setConcept(concept);
 		order.setDateActivated(start);
+		order.setDose(2.0);
+		order.setDoseUnits(Context.getConceptService().getConcept(51));
+		order.setRoute(Context.getConceptService().getConcept(22));
+		OrderFrequency orderFrequency = Context.getOrderService().getOrderFrequency(1);
+		order.setFrequency(orderFrequency);
+
 
 		if (end != null) {
 			order.setAction(Order.Action.DISCONTINUE);
@@ -220,16 +225,35 @@ public class TestUtils {
 		return (DrugOrder) Context.getOrderService().saveOrder(order, orderContext);
 	}
 
-	private static Encounter buildEncounter() {
-		// First, create a new Encounter
-		Encounter enc = new Encounter();
-		enc.setLocation(Context.getLocationService().getLocation(1));
-		enc.setEncounterType(Context.getEncounterService().getEncounterType(1));
-		enc.setEncounterDatetime(new Date());
-		enc.setPatient(Context.getPatientService().getPatient(6));
-		enc.addProvider(Context.getEncounterService().getEncounterRole(1), Context.getProviderService().getProvider(1));
-		return enc;
+	public static DrugOrder saveDrugOrder(Patient patient, Concept concept, Date start, Date end, Encounter encounter) {
+
+		CareSetting outpatient = Context.getOrderService().getCareSettingByName("OUTPATIENT");
+		OrderType drugOrderType = Context.getOrderService().getOrderTypeByUuid(OrderType.DRUG_ORDER_TYPE_UUID);
+
+		DrugOrder order = new DrugOrder();
+		order.setPatient(patient);
+		List<Provider> provider = (List<Provider>) Context.getProviderService().getProvidersByPerson(Context.getUserService().getUser(1).getPerson());
+		order.setEncounter(encounter);
+		order.setOrderer(provider.get(0));
+		order.setConcept(concept);
+		order.setDateActivated(start);
+		order.setDose(2.0);
+		order.setDoseUnits(Context.getConceptService().getConcept(51));
+		order.setRoute(Context.getConceptService().getConcept(22));
+		OrderFrequency orderFrequency = Context.getOrderService().getOrderFrequency(1);
+		order.setFrequency(orderFrequency);
+
+
+		if (end != null) {
+			order.setAction(Order.Action.DISCONTINUE);
+		}
+
+		OrderContext orderContext = new OrderContext();
+		orderContext.setCareSetting(outpatient);
+		orderContext.setOrderType(drugOrderType);
+		return (DrugOrder) Context.getOrderService().saveOrder(order, orderContext);
 	}
+
 
 	/**
 	 * Saves an untyped global property
